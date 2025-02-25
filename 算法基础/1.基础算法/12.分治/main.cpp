@@ -94,28 +94,98 @@
 
 
 //P1115 最大子段和
+//#include <iostream>
+//
+//using namespace std;
+//const int N = 2e5 + 10;
+//
+//int arr[N];
+//
+//int findmax(int left, int right)//返回left-right这段的最大字段和 
+//{
+//	if(left == right)	return arr[left];
+//	
+//	int mid = (left + right)/2;
+//	int ret = max(findmax(left, mid),findmax(mid+1, right));
+//	
+//	int suml = arr[mid], sumr = arr[mid+1];
+//	int maxl = suml, maxr = sumr;
+//	for(int i = mid-1; i >= left; i--)
+//	{
+//		suml += arr[i];
+//		maxl = max(suml, maxl);
+//	}
+//	for(int i = mid+2; i <= right; i++)
+//	{
+//		sumr += arr[i];
+//		maxr = max(sumr, maxr);
+//	}
+//	return max(maxr + maxl, ret);
+//	 
+//}
+//
+//int main()
+//{
+//	int n; 	cin >> n;
+//	for(int i = 1; i <= n; i++)	cin >> arr[i];
+//	cout << findmax(1,n);
+//	return 0;
+//}
+
+
+//P1228 地毯填补问题
 #include <iostream>
-
 using namespace std;
-const int N = 2e5 + 10;
 
-int arr[N];
-
-int findmax(int left, int right)
+//输出当前ab，len范围的地毯 
+void dfs(int a, int b, int len, int x, int y)//左上角坐标ab，长度len，公主位置xy 
 {
+	if(len == 1)	return;
+	len /= 2;
+	if(x >= a+len && y >= b+len)//右下 
+	{
+		printf("%d %d %d\n", a+len-1, b+len-1, 4);
+		dfs(a, b, len, a+len-1, b+len-1);
+		dfs(a, b+len, len, a+len-1, b+len);
+		dfs(a+len, b, len, a+len, b+len-1);
+		dfs(a+len, b+len, len, x, y);
+	}
+	else if(x < a+len && y < b+len)//左上 
+	{
+		printf("%d %d %d\n", a+len, b+len, 1);
+		dfs(a, b, len, x, y); 
+		dfs(a, b+len, len, a+len-1, b+len);		
+		dfs(a+len, b, len, a+len, b+len-1);
+		dfs(a+len, b+len, len, a+len, b+len);
+	}
+	else if(x < a+len)//右上 
+	{
+		printf("%d %d %d\n", a+len, b+len-1, 2);
+		dfs(a, b, len, a+len-1, b+len-1); 
+		dfs(a, b+len, len, x, y);		
+		dfs(a+len, b, len, a+len, b+len-1);
+		dfs(a+len, b+len, len, a+len, b+len);		
+	}
+	else//左下 
+	{
+		printf("%d %d %d\n", a+len-1, b+len, 3);
+		dfs(a, b, len, a+len-1, b+len-1); 
+		dfs(a, b+len, len, a+len-1, b+len);		
+		dfs(a+len, b, len, x, y);
+		dfs(a+len, b+len, len, a+len, b+len);			
+	}
+	
 	
 }
 
+
 int main()
 {
-	int n; 	cin >> n;
-	for(int i = 1; i <= n; i++)	cin >> arr[i];
-	cout << findmax(1,n);
-	return 0;
+	int k, x, y;	cin >> k >> x >> y;
+	k = (1 << k);
+	dfs(1, 1, k, x, y); 
+	return 0; 
 }
-
-
-
 
 
 

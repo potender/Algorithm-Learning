@@ -61,31 +61,87 @@
 
 
 //P5635 【CSGRound1】天下第一
+//#include <iostream>
+//using namespace std;
+//
+//int T, p;
+//int x, y;
+//
+//int main()
+//{
+//	cin >> T >> p;
+//	while(T--)
+//	{
+//		cin >> x >> y;
+//		int cnt = 1;
+//		while(x != 0  && y != 0)
+//		{
+//			if(cnt > 100000)	break;
+//			if(cnt%2)
+//				x = (x+y)%p;
+//			else
+//				y = (x+y)%p;
+//			cnt++;
+//		}
+//		if(x==0)	cout << 1 << endl;
+//		else if(y == 0)	cout << 2 << endl;
+//		else cout << "error" << endl;
+//	}
+//	return 0;
+//}
+
+
+//P1434 [SHOI2002] 滑雪
 #include <iostream>
 using namespace std;
+const int N = 110;
 
-int T, p;
-int x, y;
+int arr[N][N];
+int mem[N][N];
+int r, c;
+
+
+int dx[] = {0, 0, 1, -1};
+int dy[] = {-1, 1, 0, 0};
+
+int dfs(int x, int y)//(x, y)为起点最远的距离 
+{
+	if(mem[x][y])	return mem[x][y];
+	int len = 1;
+	
+	for(int i = 0; i < 4; i++)
+	{
+		int nx = x + dx[i], ny = y + dy[i];
+		if(nx < 1 || nx > r || ny < 1 || ny > c)	continue;
+		if(arr[nx][ny] >= arr[x][y])	continue;
+		
+		
+		len = max(dfs(nx, ny)+1, len);
+	}
+	
+	return mem[x][y] = len; 
+}
 
 int main()
 {
-	cin >> T >> p;
-	while(T--)
+	cin >> r >> c;
+	int ret = 1;
+	
+	for(int i = 1; i <= r; i++)
 	{
-		cin >> x >> y;
-		int cnt = 1;
-		while(x != 0  && y != 0)
+		for(int j = 1; j <= c; j++)
 		{
-			if(cnt > 100000)	break;
-			if(cnt%2)
-				x = (x+y)%p;
-			else
-				y = (x+y)%p;
-			cnt++;
+			cin >> arr[i][j];
 		}
-		if(x==0)	cout << 1 << endl;
-		else if(y == 0)	cout << 2 << endl;
-		else cout << "error" << endl;
 	}
+	for(int i = 1; i <= r; i++)
+	{
+		for(int j = 1; j <= c; j++)
+		{
+			ret = max(dfs(i, j), ret); 
+		}
+	}
+	cout << ret << endl;
 	return 0;
-}
+} 
+
